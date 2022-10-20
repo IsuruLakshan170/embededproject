@@ -4,14 +4,12 @@
 #define BUAD 9600
 #define BUAD_RATE_CALC ((F_CPU/16/BUAD) - 1)
 
-int main(void)
-{
-	DDRB = 0xFF;
-	DDRA = 0xFF;		//--- Defining PORT A as output
+int main(void){
+	
 	i2c_init();			//--- I2C Initialization
 		
- //   char ar[] = "isuru\n";
 	char ar[32];
+	
     //High and low bits
     UBRR0H = (BUAD_RATE_CALC >> 8);
     UBRR0L = BUAD_RATE_CALC;
