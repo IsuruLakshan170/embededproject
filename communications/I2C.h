@@ -2,7 +2,6 @@
 
 #include <avr/io.h>			//--- Reg file of ATmega16
 
-#define F_CPU	16000000UL	//--- CPU Clock Frequency
 
 //--- I2C Initialize ---//
 
