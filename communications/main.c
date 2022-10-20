@@ -6,7 +6,7 @@
 
 int main(void)
 {
-    char ar[]= "hello";
+    char ar[]= "hello\n";
 
     //High and low bits
     UBRR0H = (BUAD_RATE_CALC >> 8);

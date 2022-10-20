@@ -3,29 +3,29 @@ communications.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000006  00800200  00000190  00000204  2**0
+  0 .data         00000008  00800200  00000198  0000020c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000190  00000000  00000000  00000074  2**1
+  1 .text         00000198  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  0000020a  2**0
+  2 .comment      00000030  00000000  00000000  00000214  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000023c  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000244  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000020  00000000  00000000  0000027c  2**0
+  4 .debug_aranges 00000020  00000000  00000000  00000284  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000caa  00000000  00000000  0000029c  2**0
+  5 .debug_info   00000caa  00000000  00000000  000002a4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000bd5  00000000  00000000  00000f46  2**0
+  6 .debug_abbrev 00000bd5  00000000  00000000  00000f4e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000002ff  00000000  00000000  00001b1b  2**0
+  7 .debug_line   000002ff  00000000  00000000  00001b23  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000034  00000000  00000000  00001e1c  2**2
+  8 .debug_frame  00000034  00000000  00000000  00001e24  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000053f  00000000  00000000  00001e50  2**0
+  9 .debug_str    0000053f  00000000  00000000  00001e58  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000006c  00000000  00000000  0000238f  2**0
+ 10 .debug_loc    0000006b  00000000  00000000  00002397  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000010  00000000  00000000  000023fb  2**0
+ 11 .debug_ranges 00000010  00000000  00000000  00002402  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -160,18 +160,18 @@ Disassembly of section .text:
   f4:	12 e0       	ldi	r17, 0x02	; 2
   f6:	a0 e0       	ldi	r26, 0x00	; 0
   f8:	b2 e0       	ldi	r27, 0x02	; 2
-  fa:	e0 e9       	ldi	r30, 0x90	; 144
+  fa:	e8 e9       	ldi	r30, 0x98	; 152
   fc:	f1 e0       	ldi	r31, 0x01	; 1
   fe:	00 e0       	ldi	r16, 0x00	; 0
  100:	0b bf       	out	0x3b, r16	; 59
  102:	02 c0       	rjmp	.+4      	; 0x108 <__do_copy_data+0x14>
  104:	07 90       	elpm	r0, Z+
  106:	0d 92       	st	X+, r0
- 108:	a6 30       	cpi	r26, 0x06	; 6
+ 108:	a8 30       	cpi	r26, 0x08	; 8
  10a:	b1 07       	cpc	r27, r17
  10c:	d9 f7       	brne	.-10     	; 0x104 <__do_copy_data+0x10>
  10e:	02 d0       	rcall	.+4      	; 0x114 <main>
- 110:	3d c0       	rjmp	.+122    	; 0x18c <_exit>
+ 110:	41 c0       	rjmp	.+130    	; 0x194 <_exit>
 
 00000112 <__bad_interrupt>:
  112:	76 cf       	rjmp	.-276    	; 0x0 <__vectors>
@@ -185,94 +185,97 @@ int main(void)
 {
  114:	cf 93       	push	r28
  116:	df 93       	push	r29
- 118:	00 d0       	rcall	.+0      	; 0x11a <main+0x6>
- 11a:	00 d0       	rcall	.+0      	; 0x11c <main+0x8>
- 11c:	cd b7       	in	r28, 0x3d	; 61
- 11e:	de b7       	in	r29, 0x3e	; 62
-    char ar[]= "hello";
- 120:	86 e0       	ldi	r24, 0x06	; 6
- 122:	e0 e0       	ldi	r30, 0x00	; 0
- 124:	f2 e0       	ldi	r31, 0x02	; 2
- 126:	de 01       	movw	r26, r28
- 128:	11 96       	adiw	r26, 0x01	; 1
- 12a:	01 90       	ld	r0, Z+
- 12c:	0d 92       	st	X+, r0
- 12e:	8a 95       	dec	r24
- 130:	e1 f7       	brne	.-8      	; 0x12a <main+0x16>
+ 118:	cd b7       	in	r28, 0x3d	; 61
+ 11a:	de b7       	in	r29, 0x3e	; 62
+ 11c:	27 97       	sbiw	r28, 0x07	; 7
+ 11e:	0f b6       	in	r0, 0x3f	; 63
+ 120:	f8 94       	cli
+ 122:	de bf       	out	0x3e, r29	; 62
+ 124:	0f be       	out	0x3f, r0	; 63
+ 126:	cd bf       	out	0x3d, r28	; 61
+    char ar[]= "hello\n";
+ 128:	87 e0       	ldi	r24, 0x07	; 7
+ 12a:	e0 e0       	ldi	r30, 0x00	; 0
+ 12c:	f2 e0       	ldi	r31, 0x02	; 2
+ 12e:	de 01       	movw	r26, r28
+ 130:	11 96       	adiw	r26, 0x01	; 1
+ 132:	01 90       	ld	r0, Z+
+ 134:	0d 92       	st	X+, r0
+ 136:	8a 95       	dec	r24
+ 138:	e1 f7       	brne	.-8      	; 0x132 <main+0x1e>
 
     //High and low bits
     UBRR0H = (BUAD_RATE_CALC >> 8);
- 132:	10 92 c5 00 	sts	0x00C5, r1	; 0x8000c5 <__TEXT_REGION_LENGTH__+0x7000c5>
+ 13a:	10 92 c5 00 	sts	0x00C5, r1	; 0x8000c5 <__TEXT_REGION_LENGTH__+0x7000c5>
     UBRR0L = BUAD_RATE_CALC;
- 136:	87 e6       	ldi	r24, 0x67	; 103
- 138:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7000c4>
+ 13e:	87 e6       	ldi	r24, 0x67	; 103
+ 140:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7000c4>
     ////////////////
     //transimit and recieve enable
     UCSR0B = (1 << TXEN0)| (1 << TXCIE0) | (1 << RXEN0) | (1 << RXCIE0);
- 13c:	88 ed       	ldi	r24, 0xD8	; 216
- 13e:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7000c1>
+ 144:	88 ed       	ldi	r24, 0xD8	; 216
+ 146:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7000c1>
     UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  //8 bit data format
- 142:	86 e0       	ldi	r24, 0x06	; 6
- 144:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7000c2>
+ 14a:	86 e0       	ldi	r24, 0x06	; 6
+ 14c:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7000c2>
     ////////////////////////////////////////////////////////////////
-    int i = 0;
 
     while (1){
 		//unlimited processing
-		for (i = 0; i < strlen(ar); i++){
- 148:	ae 01       	movw	r20, r28
- 14a:	4f 5f       	subi	r20, 0xFF	; 255
- 14c:	5f 4f       	sbci	r21, 0xFF	; 255
+		for (int i = 0; i < strlen(ar); i++){
+ 150:	ae 01       	movw	r20, r28
+ 152:	4f 5f       	subi	r20, 0xFF	; 255
+ 154:	5f 4f       	sbci	r21, 0xFF	; 255
 			while (( UCSR0A & (1<<UDRE0))  == 0){};
- 14e:	e0 ec       	ldi	r30, 0xC0	; 192
- 150:	f0 e0       	ldi	r31, 0x00	; 0
+ 156:	e0 ec       	ldi	r30, 0xC0	; 192
+ 158:	f0 e0       	ldi	r31, 0x00	; 0
 			UDR0 = ar[i];
- 152:	06 ec       	ldi	r16, 0xC6	; 198
- 154:	10 e0       	ldi	r17, 0x00	; 0
- 156:	be 01       	movw	r22, r28
- 158:	6f 5f       	subi	r22, 0xFF	; 255
- 15a:	7f 4f       	sbci	r23, 0xFF	; 255
+ 15a:	06 ec       	ldi	r16, 0xC6	; 198
+ 15c:	10 e0       	ldi	r17, 0x00	; 0
+ 15e:	be 01       	movw	r22, r28
+ 160:	6f 5f       	subi	r22, 0xFF	; 255
+ 162:	7f 4f       	sbci	r23, 0xFF	; 255
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  //8 bit data format
     ////////////////////////////////////////////////////////////////
-    int i = 0;
 
     while (1){
 		//unlimited processing
-		for (i = 0; i < strlen(ar); i++){
- 15c:	20 e0       	ldi	r18, 0x00	; 0
- 15e:	30 e0       	ldi	r19, 0x00	; 0
- 160:	0a c0       	rjmp	.+20     	; 0x176 <main+0x62>
+		for (int i = 0; i < strlen(ar); i++){
+ 164:	20 e0       	ldi	r18, 0x00	; 0
+ 166:	30 e0       	ldi	r19, 0x00	; 0
+ 168:	0a c0       	rjmp	.+20     	; 0x17e <main+0x6a>
 			while (( UCSR0A & (1<<UDRE0))  == 0){};
- 162:	80 81       	ld	r24, Z
- 164:	85 ff       	sbrs	r24, 5
- 166:	fd cf       	rjmp	.-6      	; 0x162 <main+0x4e>
+ 16a:	80 81       	ld	r24, Z
+ 16c:	85 ff       	sbrs	r24, 5
+ 16e:	fd cf       	rjmp	.-6      	; 0x16a <main+0x56>
 			UDR0 = ar[i];
- 168:	db 01       	movw	r26, r22
- 16a:	8d 91       	ld	r24, X+
- 16c:	bd 01       	movw	r22, r26
- 16e:	d8 01       	movw	r26, r16
- 170:	8c 93       	st	X, r24
+ 170:	db 01       	movw	r26, r22
+ 172:	8d 91       	ld	r24, X+
+ 174:	bd 01       	movw	r22, r26
+ 176:	d8 01       	movw	r26, r16
+ 178:	8c 93       	st	X, r24
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  //8 bit data format
     ////////////////////////////////////////////////////////////////
-    int i = 0;
 
     while (1){
 		//unlimited processing
-		for (i = 0; i < strlen(ar); i++){
- 172:	2f 5f       	subi	r18, 0xFF	; 255
- 174:	3f 4f       	sbci	r19, 0xFF	; 255
- 176:	da 01       	movw	r26, r20
- 178:	0d 90       	ld	r0, X+
- 17a:	00 20       	and	r0, r0
- 17c:	e9 f7       	brne	.-6      	; 0x178 <main+0x64>
- 17e:	11 97       	sbiw	r26, 0x01	; 1
- 180:	a4 1b       	sub	r26, r20
- 182:	b5 0b       	sbc	r27, r21
- 184:	2a 17       	cp	r18, r26
- 186:	3b 07       	cpc	r19, r27
- 188:	60 f3       	brcs	.-40     	; 0x162 <main+0x4e>
- 18a:	e5 cf       	rjmp	.-54     	; 0x156 <main+0x42>
+		for (int i = 0; i < strlen(ar); i++){
+ 17a:	2f 5f       	subi	r18, 0xFF	; 255
+ 17c:	3f 4f       	sbci	r19, 0xFF	; 255
+ 17e:	da 01       	movw	r26, r20
+ 180:	0d 90       	ld	r0, X+
+ 182:	00 20       	and	r0, r0
+ 184:	e9 f7       	brne	.-6      	; 0x180 <main+0x6c>
+ 186:	11 97       	sbiw	r26, 0x01	; 1
+ 188:	a4 1b       	sub	r26, r20
+ 18a:	b5 0b       	sbc	r27, r21
+ 18c:	2a 17       	cp	r18, r26
+ 18e:	3b 07       	cpc	r19, r27
+ 190:	60 f3       	brcs	.-40     	; 0x16a <main+0x56>
+ 192:	e5 cf       	rjmp	.-54     	; 0x15e <main+0x4a>
 
-0000018c <_exit>:
- 18c:	f8 94       	cli
+00000194 <_exit>:
+ 194:	f8 94       	cli
 
-0000018e <__stop_program>:
- 18e:	ff cf       	rjmp	.-2      	; 0x18e <__stop_program>
+00000196 <__stop_program>:
+ 196:	ff cf       	rjmp	.-2      	; 0x196 <__stop_program>
