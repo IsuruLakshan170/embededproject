@@ -5,7 +5,6 @@
 #include <stdlib.h>										/* Include standard library file */
 #include <stdio.h>										/* Include standard library file */
 #include "MPU6050.h"									/* Include MPU6050 register define file */
-#include "MPU6050_cal.h"								/* Include MPU6050 Functions */
 #include "I2C.h"										/* Include I2C Functions */
 #include "USART.h"										/* Include USART Functions */
 
@@ -86,43 +85,17 @@ int main(){
 		Zg = Gyro_z/16.4;
 
 
-  rollangle=atan2(Ya,Za)*180/PI; // FORMULA FOUND ON INTERNET
-  pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*256/PI; //FORMULA FOUND ON INTERNET
+		rollangle=atan2(Ya,Za)*180/PI;
+		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*256/PI; 
   
-  //Using Complemetary Filter
-  roll=A*(roll+Xg*dt)+(1-A)*rollangle;//
-  pitch=A*(pitch+Yg*dt)+(1-A)*pitchangle;
+		//Using Complementary Filter
+		roll=A*(roll+Xg*dt)+(1-A)*rollangle;//
+		pitch=A*(pitch+Yg*dt)+(1-A)*pitchangle;
 
 	
 		dtostrf( pitch, 3, 2, float_ );
 		sprintf(buffer,"Pitch = %s\n",float_);
 		USART_SendString(buffer);
 		printf("\n");
-/*
-		dtostrf( Xa, 3, 2, float_ );					
-		sprintf(buffer," Ax = %s g\t",float_);
-		USART_SendString(buffer);
-
-		dtostrf( Ya, 3, 2, float_ );
-		sprintf(buffer," Ay = %s g\t",float_);
-		USART_SendString(buffer);
-		
-		dtostrf( Za, 3, 2, float_ );
-		sprintf(buffer," Az = %s g\t",float_);
-		USART_SendString(buffer);
-
-		dtostrf( Xg, 3, 2, float_ );
-		sprintf(buffer," Gx = %s%c/s\t",float_,0xF8);
-		USART_SendString(buffer);
-
-		dtostrf( Yg, 3, 2, float_ );
-		sprintf(buffer," Gy = %s%c/s\t",float_,0xF8);
-		USART_SendString(buffer);
-		
-		dtostrf( Zg, 3, 2, float_ );
-		sprintf(buffer," Gz = %s%c/s\t\n",float_,0xF8);
-		USART_SendString(buffer);
-	
-	*/	
 	}
 }

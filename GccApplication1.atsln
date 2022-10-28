@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		GccApplication1\I2C.h = GccApplication1\I2C.h
 		GccApplication1\MPU6050.h = GccApplication1\MPU6050.h
-		GccApplication1\MPU6050_cal.h = GccApplication1\MPU6050_cal.h
 		GccApplication1\USART.h = GccApplication1\USART.h
 	EndProjectSection
 EndProject
