@@ -9,6 +9,12 @@
 #include "I2C.h"										/* Include I2C Functions */
 #include "USART.h"										/* Include USART Functions */
 
+#define A 0.962
+#define dt 0.020
+#define PI 3.14159
+
+int rollangle,pitchangle;
+int roll,pitch,yaw;
 
 float Acc_x,Acc_y,Acc_z,Gyro_x,Gyro_y,Gyro_z;
 
@@ -80,6 +86,19 @@ int main(){
 		Zg = Gyro_z/16.4;
 
 
+  rollangle=atan2(Ya,Za)*180/PI; // FORMULA FOUND ON INTERNET
+  pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*256/PI; //FORMULA FOUND ON INTERNET
+  
+  //Using Complemetary Filter
+  roll=A*(roll+Xg*dt)+(1-A)*rollangle;//
+  pitch=A*(pitch+Yg*dt)+(1-A)*pitchangle;
+
+	
+		dtostrf( pitch, 3, 2, float_ );
+		sprintf(buffer,"Pitch = %s\n",float_);
+		USART_SendString(buffer);
+		printf("\n");
+/*
 		dtostrf( Xa, 3, 2, float_ );					
 		sprintf(buffer," Ax = %s g\t",float_);
 		USART_SendString(buffer);
@@ -103,6 +122,7 @@ int main(){
 		dtostrf( Zg, 3, 2, float_ );
 		sprintf(buffer," Gz = %s%c/s\t\n",float_,0xF8);
 		USART_SendString(buffer);
-		
+	
+	*/	
 	}
 }
