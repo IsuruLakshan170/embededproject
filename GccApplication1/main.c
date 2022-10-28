@@ -71,13 +71,13 @@ int main(){
 
 		Read_RawValue();
 		
-		Xa = Acc_x;
+		Xa = Acc_x/16384.0;
 		Ya = Acc_y/16384.0;
 		Za = Acc_z/16384.0;
 		
-		Xg = Gyro_x;
-		Yg = Gyro_y;
-		Zg = Gyro_z/131.0;
+		Xg = Gyro_x/16.4;
+		Yg = Gyro_y/16.4;
+		Zg = Gyro_z/16.4;
 
 
 		dtostrf( Xa, 3, 2, float_ );					
