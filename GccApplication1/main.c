@@ -10,10 +10,7 @@
 #include "USART.h"										/* Include USART Functions */
 
 
-#define BAUD 9600
-#define UBRR_VALUE ((F_CPU/16/BAUD)-1)
-
-int Acc_x,Acc_y,Acc_z,Gyro_x,Gyro_y,Gyro_z;
+float Acc_x,Acc_y,Acc_z,Gyro_x,Gyro_y,Gyro_z;
 
 
 void MPU6050_Init(){									/* Gyro initialization function */
@@ -64,23 +61,22 @@ void Read_RawValue(){									/* Read Gyro values */
 
 int main(){
 	char buffer[20], float_[10];
-	int Xa,Ya,Za;
-	int Xg=0,Yg=0,Zg=0;
+	float Xa = 0,Ya = 0,Za = 0;
+	float Xg=0,Yg=0,Zg=0;
 	I2C_Init();											/* Initialize I2C */
 	MPU6050_Init();										/* Initialize MPU6050 */
-	initUSART();
-	float sumzg = 0;
+	initUSART();										/* Initialize USART */
 
 	while(1){
 
 		Read_RawValue();
 		
-		Xa = Acc_x/16384.0;
+		Xa = Acc_x;
 		Ya = Acc_y/16384.0;
 		Za = Acc_z/16384.0;
 		
-		Xg = Gyro_x/131.0;
-		Yg = Gyro_y/131.0;
+		Xg = Gyro_x;
+		Yg = Gyro_y;
 		Zg = Gyro_z/131.0;
 
 
@@ -105,12 +101,7 @@ int main(){
 		USART_SendString(buffer);
 		
 		dtostrf( Zg, 3, 2, float_ );
-		sprintf(buffer," Gz = %s%c/s\t",float_,0xF8);
-		USART_SendString(buffer);
-		
-		sumzg += Zg;
-		dtostrf( sumzg, 3, 2, float_ );
-		sprintf(buffer," Gz sum = %s%c/s\r\n",float_,0xF8);
+		sprintf(buffer," Gz = %s%c/s\t\n",float_,0xF8);
 		USART_SendString(buffer);
 		
 	}
