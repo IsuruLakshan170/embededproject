@@ -129,8 +129,6 @@ void initTimerInterrupt1(void)
 
 
 
-
-
 int main(void)
 {
 
@@ -220,6 +218,7 @@ int main(void)
 			
 			Lcd_DataWrite(0X30+digit10s);
 			Lcd_DataWrite(0X30+digit1s);
+			Lcd_DataWrite('°');
 		}
 	}
 }
@@ -261,6 +260,7 @@ ISR (INT0_vect)
 	Lcd_CmdWrite(0xC0);
 	Lcd_DataWrite(0X30+0);
 	Lcd_DataWrite(0X30+0);
+	Lcd_DataWrite('°');
 	
 	calibration = ADC_value_x; //store reference angle
 	calibrated =1;
