@@ -4,7 +4,6 @@
 #include <avr/interrupt.h>
 #include <stdlib.h> //to use abs() function
 
-
 #define LcdDataBus PORTA
 #define LcdControlBus PORTA
 #define LcdDataBusDirnReg DDRA
