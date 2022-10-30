@@ -7,7 +7,7 @@
 #include "MPU6050.h"									/* Include MPU6050 register define file */
 #include "I2C.h"										/* Include I2C Functions */
 #include "USART.h"										/* Include USART Functions */
-#include "AngleRowData.h"								/*Include MPU6050 Functions */
+#include "AngleRawData.h"								/*Include MPU6050 Functions */
 
 #define A 0.962
 #define dt 0.020

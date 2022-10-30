@@ -1,6 +1,6 @@
 
-#ifndef ANGLE_ROW_H_					/* Define library H file if not defined */
-#define ANGLE_ROW_H_
+#ifndef ANGLE_RAW_H_					/* Define library H file if not defined */
+#define ANGLE_RAW_H_
 
 #include "MPU6050.h"									/* Include MPU6050 register define file */
 #include "I2C.h"										/* Include I2C Functions */
