@@ -40,7 +40,9 @@ int main(){
 	Lcd_DataWrite(' ');
 	Lcd_DataWrite('d');
 	Lcd_DataWrite('e');
-	Lcd_DataWrite('g');								
+	Lcd_DataWrite('g');
+	
+	Lcd_CmdWrite(0xC0);								
 
 	while(1){
 		//get data from Sensor using AngleRowData lib
