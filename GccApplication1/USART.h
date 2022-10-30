@@ -1,3 +1,6 @@
+#ifndef USART_H_					
+#define USART_H_
+
 
 #define F_CPU 16000000UL
 #define BAUD 9600
@@ -5,8 +8,6 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-
-unsigned char rxByte;
 
 void initUSART(void)
 {
@@ -29,11 +30,13 @@ unsigned char receiveUSART(void)
 	return UDR0; 
 }
 
-void USART_SendString(char *str){						/* Send string of USART data function */
+void USART_SendString(char *str){						
 	int i=0;
 	while (str[i]!=0){
-		transmitUSART(str[i]);							/* Send each char of string till the NULL */
+		transmitUSART(str[i]);							
 		i++;
 	}
 	return;
 }
+
+#endif

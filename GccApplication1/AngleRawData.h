@@ -1,5 +1,5 @@
 
-#ifndef ANGLE_RAW_H_					/* Define library H file if not defined */
+#ifndef ANGLE_RAW_H_					
 #define ANGLE_RAW_H_
 
 #include "MPU6050.h"									/* Include MPU6050 register define file */

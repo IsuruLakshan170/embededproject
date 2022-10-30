@@ -1,5 +1,5 @@
-#ifndef I2C_MASTER_H_FILE_H_					/* Define library H file if not defined */
-#define I2C_MASTER_H_FILE_H_
+#ifndef I2C_H_				
+#define I2C_H_
 
 #include <avr/io.h>								/* Include AVR std. library file */
 #include <util/delay.h>							/* Include delay header file */
@@ -113,4 +113,4 @@ char I2C_Read_Nack()										/* I2C read nack function */
 }
 
 
-#endif														/* I2C_MASTER_H_FILE_H_ */
+#endif														
