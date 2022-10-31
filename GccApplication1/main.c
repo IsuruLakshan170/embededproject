@@ -10,6 +10,7 @@
 #include "AngleRawData.h"								/*Include MPU6050 Functions */
 #include "LCD.h"										/*Include LCD Display Functions */
 
+
 #define A 0.962
 #define dt 0.020
 #define PI 3.14159
