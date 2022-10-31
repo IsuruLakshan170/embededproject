@@ -34,7 +34,6 @@ void Lcd_CmdWrite(char cmd){
 
 void Lcd_init(void){
 	LcdDataBusDirnReg = 0xFF; //LCD attached port as output
-	DDRA &= 0B11111111;
 	Lcd_CmdWrite(0x02); //Initialize Lcd in 4-bit mode
 	Lcd_CmdWrite(0x28); //enable 5x7 mode for chars
 	Lcd_CmdWrite(0x0E); //Display OFF, Cursor ON
@@ -60,6 +59,26 @@ void Lcd_DataWrite(char dat){
 	_delay_ms (10);
 	LcdControlBus &= ~(1<<LCD_EN);
 	_delay_ms (10) ;
+}
+
+void SendLCD(int angle, int refangle){
+	dtostrf( pitch, 3, 2, float_ );
+	sprintf(buffer,"Pitch = %s\n",float_);
+	
+	Lcd_DataWrite('A');
+	Lcd_DataWrite('n');
+	Lcd_DataWrite('g');
+	Lcd_DataWrite('l');
+	Lcd_DataWrite('e');
+	Lcd_DataWrite(' ');
+	Lcd_DataWrite('i');
+	Lcd_DataWrite('n');
+	Lcd_DataWrite(' ');
+	Lcd_DataWrite('d');
+	Lcd_DataWrite('e');
+	Lcd_DataWrite('g');
+	
+	Lcd_CmdWrite(0xC0);
 }
 
 #endif	

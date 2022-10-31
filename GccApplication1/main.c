@@ -27,22 +27,7 @@ int main(){
 	I2C_Init();											
 	MPU6050_Init();										
 	initUSART();	
-	Lcd_init();
-	
-	Lcd_DataWrite('A');
-	Lcd_DataWrite('n');
-	Lcd_DataWrite('g');
-	Lcd_DataWrite('l');
-	Lcd_DataWrite('e');
-	Lcd_DataWrite(' ');
-	Lcd_DataWrite('i');
-	Lcd_DataWrite('n');
-	Lcd_DataWrite(' ');
-	Lcd_DataWrite('d');
-	Lcd_DataWrite('e');
-	Lcd_DataWrite('g');
-	
-	Lcd_CmdWrite(0xC0);								
+	Lcd_init();							
 
 	while(1){
 		//get data from Sensor using AngleRowData lib
@@ -55,7 +40,7 @@ int main(){
 		Xg = dataArray[3]/16.4;
 		Yg = dataArray[4]/16.4;
 		
-		//calculate pitch
+		//calculate pitch/roal angle
 		rollangle=atan2(Ya,Za)*180/PI;
 		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*240/PI; 
   
@@ -68,6 +53,8 @@ int main(){
 		sprintf(buffer,"Pitch = %s\n",float_);
 		USART_SendString(buffer);
 		printf("\n");
+		
+		//send to display
 	}
 	return 0;
 }
