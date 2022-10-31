@@ -12,6 +12,8 @@
 #define LCD_RW 1
 #define LCD_EN 2
 
+char buffer[20], AngleValue[10], bufferRef[20], AngleRefValue[10];
+
 void Lcd_CmdWrite(char cmd){
 	LcdDataBus = (cmd & 0xF0); //Set upper 4 bits of the cmd
 	LcdControlBus &= ~(1<<LCD_RS) ; //Set RS pin to LOW
@@ -60,25 +62,30 @@ void Lcd_DataWrite(char dat){
 	LcdControlBus &= ~(1<<LCD_EN);
 	_delay_ms (10) ;
 }
-
-void SendLCD(int angle, int refangle){
-	dtostrf( pitch, 3, 2, float_ );
-	sprintf(buffer,"Pitch = %s\n",float_);
-	
-	Lcd_DataWrite('A');
-	Lcd_DataWrite('n');
-	Lcd_DataWrite('g');
-	Lcd_DataWrite('l');
-	Lcd_DataWrite('e');
-	Lcd_DataWrite(' ');
-	Lcd_DataWrite('i');
-	Lcd_DataWrite('n');
-	Lcd_DataWrite(' ');
-	Lcd_DataWrite('d');
-	Lcd_DataWrite('e');
-	Lcd_DataWrite('g');
-	
+void SendLCD(char *str){
+	int i=0;
+	while (str[i]!=0){
+		Lcd_DataWrite(str[i]);
+		i++;
+	}
 	Lcd_CmdWrite(0xC0);
 }
+
+void SendOut(int angle, int refangle){	
+	dtostrf( refangle, 3, 2, AngleRefValue );
+	sprintf(bufferRef,"Ref. Angle = %s\t",AngleRefValue);
+	dtostrf( angle, 3, 2, AngleValue );
+	sprintf(buffer,"Angle = %s\n",AngleValue);
+	//send to Console
+	USART_SendString(bufferRef);
+	USART_SendString(buffer);
+
+}
+
+void LCDDisplay(){
+	//send to display
+	SendLCD(buffer);
+}
+
 
 #endif	

@@ -17,7 +17,6 @@
 int rollangle,pitchangle;
 int roll,pitch,yaw;
 
-char buffer[20], float_[10];
 float Xa = 0,Ya = 0,Za = 0;
 float Xg=0,Yg=0;
 
@@ -40,7 +39,7 @@ int main(){
 		Xg = dataArray[3]/16.4;
 		Yg = dataArray[4]/16.4;
 		
-		//calculate pitch/roal angle
+		//calculate pitch/roll angle
 		rollangle=atan2(Ya,Za)*180/PI;
 		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*240/PI; 
   
@@ -48,13 +47,8 @@ int main(){
 		roll=A*(roll+Xg*dt)+(1-A)*rollangle;//
 		pitch=A*(pitch+Yg*dt)+(1-A)*pitchangle;
 		
-		//send data to PC
-		dtostrf( pitch, 3, 2, float_ );
-		sprintf(buffer,"Pitch = %s\n",float_);
-		USART_SendString(buffer);
-		printf("\n");
-		
-		//send to display
+		//send output
+		SendOut(pitch,0);
 	}
 	return 0;
 }
