@@ -34,6 +34,7 @@ void Lcd_CmdWrite(char cmd){
 
 void Lcd_init(void){
 	LcdDataBusDirnReg = 0xFF; //LCD attached port as output
+	DDRA &= 0B11111111;
 	Lcd_CmdWrite(0x02); //Initialize Lcd in 4-bit mode
 	Lcd_CmdWrite(0x28); //enable 5x7 mode for chars
 	Lcd_CmdWrite(0x0E); //Display OFF, Cursor ON
