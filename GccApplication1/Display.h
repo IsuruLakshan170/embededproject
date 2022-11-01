@@ -23,7 +23,7 @@ volatile int sleep = 0; //to check the device is in sleep or not
 void initPorts (void){
 	
 	LcdDataBusDirnReg = 0xFF; //LCD attached port as output
-	DDRD &= 0B11111110;
+	
 
 }
 

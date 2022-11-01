@@ -5,6 +5,7 @@
 #include <avr/interrupt.h>
 #include <stdlib.h>										/* Include standard library file */
 #include <stdio.h>										/* Include standard library file */
+#include <util/delay.h>
 #include "MPU6050.h"									/* Include MPU6050 register define file */
 #include "I2C.h"										/* Include I2C Functions */
 #include "USART.h"										/* Include USART Functions */
@@ -21,6 +22,7 @@ int roll,pitch,yaw;
 
 float Xa = 0,Ya = 0,Za = 0;
 float Xg=0,Yg=0;
+volatile int temp, counter= 0; 
 
 void enableTimerInterrupt1(void)
 {
@@ -42,6 +44,12 @@ void initTimerInterrupt1(void)
 	enableTimerInterrupt1();
 }
 
+void intInteruptPort0(void){
+	//	EIMSK |= 0x01; //Bit0 of EIMSK set to 1(enable INT0 interrupt
+	EICRA |= 0B00000011; // Trigger at rising edge
+	EIMSK |= 0B00010000; // Enable External interrupt 4
+}
+
 int main(){
 	
 	//system initializations
@@ -50,13 +58,21 @@ int main(){
 	initUSART();	
 	Lcd_init();		
 	initTimerInterrupt1();
-	sei();
+	intInteruptPort0();
 	
+	sei();
+	//DDRE &= 0B11101111;
+	
+	int sleep = 0;
+	int calibrated = 0;
+	//int temp_sleep = 0;	
+	int prev = 0;
 			
 
 	while(1){
 		//get data from Sensor using AngleRowData lib
 		float* dataArray = Read_RawValue();
+	
 		
 		//read row data
 		Xa = dataArray[0]/16384.0;
@@ -65,23 +81,52 @@ int main(){
 		Xg = dataArray[3]/16.4;
 		Yg = dataArray[4]/16.4;
 		
-		//calculate pitch/roll angle
-		rollangle=atan2(Ya,Za)*180/PI;
+		//calculate pitch
 		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*240/PI; 
   
-		//Calculate roll and pitch
-		roll=A*(roll+Xg*dt)+(1-A)*rollangle;//
+		//Calculate  pitch
 		pitch=A*(pitch+Yg*dt)+(1-A)*pitchangle;
+	
 		
-		//send output
-		SendOut(pitch,0);
+		if(counter>2){
+			Lcd_CmdWrite(0x08);
+			sleep = 1;
+			counter=0;
+			prev = pitch;
+		}
+		
+	
+		
+		if(sleep==1&&prev!=pitch){
+			Lcd_init();
+			sleep=0;
+			counter=0;
+		}
+		
+		if(prev!=pitch){
+			counter=0;
+		}
+		
+		//if(!(PINE & 0B00010000)){
+		//	temp = pitch;
+		//}
+		
+		
 	}
 	return 0;
 }
 
 ISR(TIMER1_COMPA_vect)
 {
+	SendOut(pitch-temp,0);
 	LCDDisplay();
+	counter++;
+}
+
+ISR(INT4_vect){
+	temp = pitch;
+	USART_SendString("KATAYA GONA ");
+	
 	
 }
 
