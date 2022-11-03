@@ -6,6 +6,7 @@
 #include <stdlib.h>										/* Include standard library file */
 #include <stdio.h>										/* Include standard library file */
 #include <util/delay.h>
+#include <math.h>
 #include "MPU6050.h"									/* Include MPU6050 register define file */
 #include "I2C.h"										/* Include I2C Functions */
 #include "USART.h"										/* Include USART Functions */
@@ -22,7 +23,7 @@ int roll,pitch,yaw;
 
 float Xa = 0,Ya = 0,Za = 0;
 float Xg=0,Yg=0;
-volatile int temp, counter= 0;
+volatile int ref_angle, counter= 0;
 
 void enableTimerInterrupt1(void)
 {
@@ -45,7 +46,7 @@ void initTimerInterrupt1(void)
 }
 
 void intInteruptPort0(void){
-	//	EIMSK |= 0x01; //Bit0 of EIMSK set to 1(enable INT0 interrupt
+	
 	EICRA = (0b10 << ISC10) | (0b10 << ISC00);
 	EIMSK |= 0B00010000; // Enable External interrupt 4
 }
@@ -87,9 +88,10 @@ int main(){
 		
 		//Calculate  pitch
 		pitch=A*(pitch+Yg*dt)+(1-A)*pitchangle;
+		pitch=abs(pitch)%91;
 		
 		
-		if(counter>2){
+		if(counter>60){
 			Lcd_CmdWrite(0x08);
 			sleep = 1;
 			counter=0;
@@ -119,13 +121,13 @@ int main(){
 
 ISR(TIMER1_COMPA_vect)
 {
-	SendOut(pitch-temp,0);
+	SendOut(pitch-ref_angle,ref_angle);
 	LCDDisplay();
 	counter++;
 }
 
 ISR(INT4_vect){
-	temp = pitch;
+	ref_angle = pitch;
 	USART_SendString("KATAYA GONA0");
 	
 	
