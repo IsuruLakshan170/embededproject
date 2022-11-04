@@ -96,7 +96,9 @@ void SendOut(int angle, int refangle){
 }
 
 void LCDDisplay(){
+
 	//send to display
+	Lcd_CmdWrite(0x0F);
 	if(bigin == 1){
 		Lcd_CmdWrite(0x01);
 		SendLCD(bufferRef);
@@ -119,7 +121,7 @@ void LCDDisplay(){
 			SendLCD(buffer);
 		}
 	}
-
+	Lcd_CmdWrite(0x0C);
 	//update previous angle
 	prvAngle = defAngle;
 	prvRefAngle = defRefangle;

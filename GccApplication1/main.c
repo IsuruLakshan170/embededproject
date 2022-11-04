@@ -24,6 +24,7 @@ int pitch;
 float Xa = 0,Ya = 0,Za = 0;
 float Xg=0,Yg=0;
 int ref_angle= 0;
+int timeCounter = 0;
 
 int main(){
 	DDRE &= 0x00;//input
@@ -57,12 +58,21 @@ int main(){
 		
 		//send output
 		SendOut(pitch,ref_angle);
+		
+		//check sleep
+		if(timeCounter >= 10){
+			Lcd_CmdWrite(0x08);
+		}
 	}
 	return 0;
 }
 
 ISR(TIMER1_COMPA_vect){
+	if(prvAngle != defAngle){
+		timeCounter = 0;
+	}
 	LCDDisplay();
+	timeCounter++;
 }
 
 ISR(INT4_vect){
