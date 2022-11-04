@@ -63,27 +63,25 @@ void Lcd_DataWrite(char dat){
 	_delay_ms (10) ;
 }
 void SendLCD(char *str){
+	Lcd_CmdWrite(0x01);
 	int i=0;
 	while (str[i]!=0){
 		Lcd_DataWrite(str[i]);
 		i++;
 	}
-	Lcd_CmdWrite(0xC0);
 }
 
 void SendOut(int angle, int refangle){	
-	dtostrf( refangle, 3, 2, AngleRefValue );
-	sprintf(bufferRef,"Ref. Angle = %s\t",AngleRefValue);
 	dtostrf( angle, 3, 2, AngleValue );
-	sprintf(buffer,"Angle = %s\n",AngleValue);
+	sprintf(buffer,"Angle = %s",AngleValue);
 	//send to Console
-	USART_SendString(bufferRef);
 	USART_SendString(buffer);
-
+	USART_SendString("\n");
 }
 
 void LCDDisplay(){
 	//send to display
+	//SendLCD(bufferRef);
 	SendLCD(buffer);
 }
 

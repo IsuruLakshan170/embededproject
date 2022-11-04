@@ -23,7 +23,7 @@ int roll,pitch,yaw;
 
 float Xa = 0,Ya = 0,Za = 0;
 float Xg=0,Yg=0;
-volatile int ref_angle, counter= 0;
+volatile int ref_angle=0;
 
 void enableTimerInterrupt1(void)
 {
@@ -38,16 +38,14 @@ void disableTimerInterrupt1(void)
 void initTimerInterrupt1(void)
 {
 	TCNT1 = 0x00;		// Init counter to 0
-	//Prescalar to 1024, Mode to CTC
-	//TCCR1A no change
 	TCCR1B |= ((1<<WGM12)|(1<<CS12)|(1<<CS10)); //Set prescaler 0 to 1
 	OCR1A = 46875 - 1;
 	enableTimerInterrupt1();
 }
 
-void intInteruptPort0(void){
+void intInteruptPort(void){
 	
-	EICRA = (0b10 << ISC10) | (0b10 << ISC00);
+	EICRA |= 0B00000011;
 	EIMSK |= 0B00010000; // Enable External interrupt 4
 }
 
@@ -58,17 +56,12 @@ int main(){
 	MPU6050_Init();
 	initUSART();
 	Lcd_init();
+	//Timer interrupt initializations 
 	initTimerInterrupt1();
-	intInteruptPort0();
-	
-	sei();
-	//DDRE &= 0B11101111;
-	
-	int sleep = 0;
-	int calibrated = 0;
-	//int temp_sleep = 0;
-	int prev = 0;
-	
+	//Extranal interrupt initializations
+	intInteruptPort();
+	//Enabel extranel intrrupt
+	sei();	
 
 	while(1){
 		
@@ -88,47 +81,16 @@ int main(){
 		
 		//Calculate  pitch
 		pitch=A*(pitch+Yg*dt)+(1-A)*pitchangle;
-		pitch=abs(pitch)%91;
-		
-		
-		if(counter>60){
-			Lcd_CmdWrite(0x08);
-			sleep = 1;
-			counter=0;
-			prev = pitch;
-		}
-		
-		
-		
-		if(sleep==1&&prev!=pitch){
-			Lcd_init();
-			sleep=0;
-			counter=0;
-		}
-		
-		if(prev!=pitch){
-			counter=0;
-		}
-		
-		/*if((PINE & 0B00010000)==1){
-			temp = pitch;
-		}*/
-		
-		
+		//send output
+		SendOut(pitch,0);
 	}
 	return 0;
 }
 
-ISR(TIMER1_COMPA_vect)
-{
-	SendOut(pitch-ref_angle,ref_angle);
+ISR(TIMER1_COMPA_vect){
 	LCDDisplay();
-	counter++;
 }
 
 ISR(INT4_vect){
-	ref_angle = pitch;
-	USART_SendString("KATAYA GONA0");
-	
-	
+	ref_angle = pitch;	
 }
