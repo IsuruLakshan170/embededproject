@@ -90,5 +90,4 @@ ISR(TIMER1_COMPA_vect){
 
 ISR(INT4_vect){
 	ref_angle = pitch;	
-	USART_SendString("init\n");
 }
