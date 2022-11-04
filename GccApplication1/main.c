@@ -44,13 +44,13 @@ void initTimerInterrupt1(void)
 }
 
 void intInteruptPort(void){
-	
-	EICRA |= 0B00000011;
-	EIMSK |= 0B00010000; // Enable External interrupt 4
+	PORTE &= ~(1<<INT4);//set PortE4(pin 2) as input
+	EIMSK |= (1<<INT4);//Enable INT4 interrupt
+	EICRB |= (1<<ISC00);//Enable any edge as INT request
 }
 
 int main(){
-	
+	DDRE &= 0x00;//input
 	//system initializations
 	I2C_Init();
 	MPU6050_Init();
@@ -60,15 +60,12 @@ int main(){
 	initTimerInterrupt1();
 	//Extranal interrupt initializations
 	intInteruptPort();
-	//Enabel extranel intrrupt
-	sei();	
+	//Enabel Global intrrupt	
+	sei();
 
 	while(1){
-		
 		//get data from Sensor using AngleRowData lib
 		float* dataArray = Read_RawValue();
-		
-		
 		//read row data
 		Xa = dataArray[0]/16384.0;
 		Ya = dataArray[1]/16384.0;
@@ -93,4 +90,5 @@ ISR(TIMER1_COMPA_vect){
 
 ISR(INT4_vect){
 	ref_angle = pitch;	
+	USART_SendString("init\n");
 }
