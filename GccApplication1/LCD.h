@@ -13,8 +13,8 @@
 #define LCD_EN 2
 
 int realAngle = 0;
-int prvAngle=0, prvRefAngle=0;
-int defAngle=0, defRefangle=0;
+int prvAngle , prvRefAngle;
+int defAngle=0, defRefangle=0, bigin =1;
 
 char buffer[20], AngleValue[10], bufferRef[20], AngleRefValue[10];
 
@@ -75,8 +75,7 @@ void SendLCD(char *str){
 }
 
 void SendOut(int angle, int refangle){	
-		defAngle = angle;
-		defRefangle = refangle;
+	defRefangle = refangle;
 	int tempRealAngle = angle - refangle;
 	if(tempRealAngle >= 0){
 		realAngle = tempRealAngle;
@@ -84,6 +83,7 @@ void SendOut(int angle, int refangle){
 		int tempRealAngle = refangle - angle;
 		realAngle = tempRealAngle * (-1);
 	}
+	defAngle = realAngle;
 	dtostrf( realAngle, 3, 2, AngleValue );
 	sprintf(buffer,"Angle = %s",AngleValue);
 	dtostrf( refangle, 3, 2, AngleRefValue );
@@ -97,10 +97,33 @@ void SendOut(int angle, int refangle){
 
 void LCDDisplay(){
 	//send to display
-	Lcd_CmdWrite(0x01);
-	SendLCD(bufferRef);
-	Lcd_CmdWrite(0xC0);
-	SendLCD(buffer);
+	if(bigin == 1){
+		Lcd_CmdWrite(0x01);
+		SendLCD(bufferRef);
+		Lcd_CmdWrite(0xC0);
+		SendLCD(buffer);
+		bigin = 0;
+	}else{
+		if(prvAngle != defAngle && prvRefAngle == defRefangle){;
+			Lcd_CmdWrite(0xC0);
+			SendLCD(buffer);
+		}
+		if(prvAngle == defAngle && prvRefAngle != defRefangle){
+			Lcd_CmdWrite(0x01);
+			SendLCD(bufferRef);
+		}
+		if(prvAngle != defAngle && prvRefAngle != defRefangle){
+			Lcd_CmdWrite(0x01);
+			SendLCD(bufferRef);
+			Lcd_CmdWrite(0xC0);
+			SendLCD(buffer);
+		}
+	}
+
+	//update previous angle
+	prvAngle = defAngle;
+	prvRefAngle = defRefangle;
+
 }
 
 
