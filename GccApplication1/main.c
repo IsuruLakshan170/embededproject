@@ -1,13 +1,13 @@
-#define F_CPU 16000000UL								/* Define CPU clock Frequency e.g. here its 16MHz */
-#include <avr/io.h>										/* Include AVR std. library file */
-#include <util/delay.h>									/* Include delay header file */
-#include <inttypes.h>									/* Include integer type header file */
+#define F_CPU 16000000UL								
+#include <avr/io.h>										
+#include <util/delay.h>									
+#include <inttypes.h>									
 #include <avr/interrupt.h>
-#include <stdlib.h>										/* Include standard library file */
-#include <stdio.h>										/* Include standard library file */
+#include <stdlib.h>										
+#include <stdio.h>										
 #include <util/delay.h>
 #include <math.h>
-#include "MPU6050.h"									/* Include MPU6050 register define file */
+#include "MPU6050.h"									/* Include MPU6050 registers list file */
 #include "I2C.h"										/* Include I2C Functions */
 #include "USART.h"										/* Include USART Functions */
 #include "AngleRawData.h"								/*Include MPU6050 Functions */
@@ -18,8 +18,8 @@
 #define dt 0.020
 #define PI 3.14159
 
-int rollangle,pitchangle;
-int roll,pitch,yaw;
+int pitchangle;
+int pitch;
 
 float Xa = 0,Ya = 0,Za = 0;
 float Xg=0,Yg=0;
@@ -49,11 +49,13 @@ int main(){
 		Xg = dataArray[3]/16.4;
 		Yg = dataArray[4]/16.4;
 		
-		//calculate pitch
+		//calculate pitch angle
 		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*240/PI;
 		
 		//Calculate  pitch
 		pitch = A*(pitch+Yg*dt)+(1-A)*pitchangle;
+		
+		//send output
 		SendOut(pitch,ref_angle);
 	}
 	return 0;

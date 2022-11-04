@@ -13,6 +13,8 @@
 #define LCD_EN 2
 
 int realAngle = 0;
+int prvAngle=0, prvRefAngle=0;
+int defAngle=0, defRefangle=0;
 
 char buffer[20], AngleValue[10], bufferRef[20], AngleRefValue[10];
 
@@ -73,6 +75,8 @@ void SendLCD(char *str){
 }
 
 void SendOut(int angle, int refangle){	
+		defAngle = angle;
+		defRefangle = refangle;
 	int tempRealAngle = angle - refangle;
 	if(tempRealAngle >= 0){
 		realAngle = tempRealAngle;
@@ -83,7 +87,7 @@ void SendOut(int angle, int refangle){
 	dtostrf( realAngle, 3, 2, AngleValue );
 	sprintf(buffer,"Angle = %s",AngleValue);
 	dtostrf( refangle, 3, 2, AngleRefValue );
-	sprintf(bufferRef,"Ref. = %s",AngleRefValue);
+	sprintf(bufferRef,"Ref.  = %s",AngleRefValue);
 	//send to Console
 	USART_SendString(buffer);
 	USART_SendString("\t");
