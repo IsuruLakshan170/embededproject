@@ -23,7 +23,7 @@ int roll,pitch,yaw;
 
 float Xa = 0,Ya = 0,Za = 0;
 float Xg=0,Yg=0;
-volatile int ref_angle=0;
+int ref_angle= 10;
 
 void enableTimerInterrupt1(void)
 {
@@ -77,9 +77,8 @@ int main(){
 		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*240/PI;
 		
 		//Calculate  pitch
-		pitch=A*(pitch+Yg*dt)+(1-A)*pitchangle;
-		//send output
-		SendOut(pitch,0);
+		pitch = A*(pitch+Yg*dt)+(1-A)*pitchangle;
+		SendOut(pitch,ref_angle);
 	}
 	return 0;
 }
