@@ -53,18 +53,18 @@ int main(){
 		Yg = dataArray[4]/16.4;
 		
 		//calculate pitch angle
-		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*240/PI;
+		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*248/PI;
 		
 		//Calculate  pitch
 		pitch = A*(pitch+Yg*dt)+(1-A)*pitchangle;
-		
-		//send output
-		SendOut(pitch,ref_angle);
 		
 		//check sleep
 		if(timeCounter >= 10){
 			Lcd_CmdWrite(0x08);
 		}
+		
+		//send output
+		SendOut(pitch,ref_angle);
 	}
 	return 0;
 }
@@ -73,7 +73,9 @@ ISR(TIMER1_COMPA_vect){
 	if(prvAngle != defAngle){
 		timeCounter = 0;
 	}
-	LCDDisplay();
+	if(timeCounter < 10){
+		LCDDisplay();
+	}
 	timeCounter++;
 }
 
