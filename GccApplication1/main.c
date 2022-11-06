@@ -27,6 +27,7 @@ int ref_angle= 0;
 int timeCounter = 0;
 
 int main(){
+	DDRB |= 0xFF;
 	DDRE &= 0x00;//input
 	//system initializations
 	I2C_Init();
@@ -39,8 +40,9 @@ int main(){
 	intInteruptPort();
 	//Enabel Global intrrupt	
 	sei();
-
+	PORTB |= 0xFF;
 	while(1){
+		
 		//get data from Sensor using AngleRowData lib
 		float* dataArray = Read_RawValue();
 		//read row data
