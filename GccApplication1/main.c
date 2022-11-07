@@ -27,6 +27,7 @@ int ref_angle= 0;
 int timeCounter = 0;
 
 int main(){
+	DDRB |= 0xFF;
 	DDRE &= 0x00;//input
 	//system initializations
 	I2C_Init();
@@ -39,8 +40,9 @@ int main(){
 	intInteruptPort();
 	//Enabel Global intrrupt	
 	sei();
-
+	PORTB |= 0xFF;
 	while(1){
+		
 		//get data from Sensor using AngleRowData lib
 		float* dataArray = Read_RawValue();
 		//read row data
@@ -51,18 +53,18 @@ int main(){
 		Yg = dataArray[4]/16.4;
 		
 		//calculate pitch angle
-		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*240/PI;
+		pitchangle=atan2(Xa,sqrt(Ya*Ya+Za*Za))*248/PI;
 		
 		//Calculate  pitch
 		pitch = A*(pitch+Yg*dt)+(1-A)*pitchangle;
-		
-		//send output
-		SendOut(pitch,ref_angle);
 		
 		//check sleep
 		if(timeCounter >= 10){
 			Lcd_CmdWrite(0x08);
 		}
+		
+		//send output
+		SendOut(pitch,ref_angle);
 	}
 	return 0;
 }
@@ -71,7 +73,9 @@ ISR(TIMER1_COMPA_vect){
 	if(prvAngle != defAngle){
 		timeCounter = 0;
 	}
-	LCDDisplay();
+	if(timeCounter < 10){
+		LCDDisplay();
+	}
 	timeCounter++;
 }
 

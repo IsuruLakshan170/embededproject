@@ -96,7 +96,6 @@ void SendOut(int angle, int refangle){
 }
 
 void LCDDisplay(){
-
 	//send to display
 	Lcd_CmdWrite(0x0F);
 	if(bigin == 1){
